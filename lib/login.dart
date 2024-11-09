@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'sign_up_page.dart'; // Import the Sign-Up page
 import 'forgot_password_page.dart'; // Import the Forgot Password page
+import 'homepage.dart'; // Import the Home Page
 import 'styles.dart'; // Import shared colors if you created styles.dart
 
 class LoginPage extends StatelessWidget {
-  @override
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -24,11 +27,11 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20),
-              // Replace this with the logo widget you choose
-              SizedBox(height: 120), // Placeholder for logo height
+              // for the loogo to be added.
+              SizedBox(height: 120),
               SizedBox(height: 20),
-              _buildInputField('Email'),
-              _buildInputField('Password', obscureText: true),
+              _buildInputField('Email', emailController),
+              _buildInputField('Password', passwordController, obscureText: true),
               SizedBox(height: 20),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -39,7 +42,21 @@ class LoginPage extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 80),
                 ),
                 onPressed: () {
-                  // Add sign-in logic here
+                  // Check if the email is valid
+                  if (emailController.text.endsWith('@aucegypt.edu')) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomePage()),
+                    );
+                  } else {
+                    // Show an error if the email is invalid
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Please use an AUC email (@aucegypt.edu)'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
                 },
                 child: Text('Login', style: TextStyle(fontSize: 18)),
               ),
@@ -48,17 +65,16 @@ class LoginPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => SignUpPage()),
+                    MaterialPageRoute(builder: (context) => SignUpPage()),
                   );
                 },
                 child: Text('New user? Sign-Up', style: TextStyle(color: primaryColor)),
               ),
               TextButton(
                 onPressed: () {
-
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => ForgotPasswordPage()),
+                    MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
                   );
                 },
                 child: Text('Forgot My Password', style: TextStyle(color: primaryColor)),
@@ -70,10 +86,11 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _buildInputField(String label, {bool obscureText = false}) {
+  Widget _buildInputField(String label, TextEditingController controller, {bool obscureText = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextField(
+        controller: controller,
         obscureText: obscureText,
         decoration: InputDecoration(
           labelText: label,
@@ -87,6 +104,4 @@ class LoginPage extends StatelessWidget {
       ),
     );
   }
-
-  
 }
