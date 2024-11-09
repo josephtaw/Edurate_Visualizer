@@ -1,6 +1,6 @@
-# edurate_pone
+# edurate mobile application
 
-A new Flutter project.
+A project using Flutter (Dart).
 
 ## Getting Started
 
