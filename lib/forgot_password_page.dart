@@ -1,7 +1,10 @@
+// forgot_password_page.dart
 import 'package:flutter/material.dart';
 import 'styles.dart';
 
 class ForgotPasswordPage extends StatelessWidget {
+  final TextEditingController emailController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,39 +22,19 @@ class ForgotPasswordPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildInputField('AUC Email'),
+              TextField(
+                controller: emailController,
+                decoration: inputDecoration.copyWith(labelText: 'AUC Email'),
+              ),
               SizedBox(height: 20),
               ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 80),
-                ),
+                style: buttonStyle,
                 onPressed: () {
-                  // Logic to send verification code
+                  // Add logic to send verification code
                 },
                 child: Text('Send Verification Code', style: TextStyle(fontSize: 18)),
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInputField(String label) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextField(
-        decoration: InputDecoration(
-          labelText: label,
-          filled: true,
-          fillColor: inputFieldColor,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide.none,
           ),
         ),
       ),
