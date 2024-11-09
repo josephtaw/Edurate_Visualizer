@@ -5,6 +5,7 @@ import 'styles.dart'; // Import shared colors if you created styles.dart
 
 class LoginPage extends StatelessWidget {
   @override
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -54,6 +55,7 @@ class LoginPage extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (_) => ForgotPasswordPage()),
@@ -85,4 +87,6 @@ class LoginPage extends StatelessWidget {
       ),
     );
   }
+
+  
 }

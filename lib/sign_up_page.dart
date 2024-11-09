@@ -33,7 +33,7 @@ class SignUpPage extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 80),
                 ),
                 onPressed: () {
-                  // Logic to upload transcript
+                  // not yet implemented
                 },
                 child: Text('Upload', style: TextStyle(fontSize: 18)),
               ),
@@ -47,7 +47,7 @@ class SignUpPage extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 80),
                 ),
                 onPressed: () {
-                  // Register logic
+                  // not yet implemented
                 },
                 child: Text('Sign-Up', style: TextStyle(fontSize: 18)),
               ),
