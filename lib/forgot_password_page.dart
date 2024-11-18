@@ -5,6 +5,8 @@ import 'styles.dart';
 class ForgotPasswordPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
 
+  ForgotPasswordPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,9 +14,9 @@ class ForgotPasswordPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text('Forgot Password', style: TextStyle(color: Colors.black87)),
+        title: const Text('Forgot Password', style: TextStyle(color: Colors.black87)),
         centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.black87),
+        iconTheme: const IconThemeData(color: Colors.black87),
       ),
       body: Center(
         child: Padding(
@@ -26,13 +28,13 @@ class ForgotPasswordPage extends StatelessWidget {
                 controller: emailController,
                 decoration: inputDecoration.copyWith(labelText: 'AUC Email'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 style: buttonStyle,
                 onPressed: () {
                   // Add logic to send verification code
                 },
-                child: Text('Send Verification Code', style: TextStyle(fontSize: 18)),
+                child: const Text('Send Verification Code', style: TextStyle(fontSize: 18)),
               ),
             ],
           ),

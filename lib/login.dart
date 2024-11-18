@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'sign_up_page.dart'; // Import the Sign-Up page
-import 'forgot_password_page.dart'; // Import the Forgot Password page
-import 'homepage.dart'; // Import the Home Page
-import 'styles.dart'; // Import shared colors if you created styles.dart
+import 'package:sqflite/sqflite.dart';
+import 'homepage.dart';
+import 'database.dart';
+import 'sign_up_page.dart';
+import 'styles.dart';
 
 class LoginPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +21,9 @@ class LoginPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              Image.asset('assets/logo.png', height: 120),
+              const SizedBox(height: 20),
+              const Text(
                 'Log-In',
                 style: TextStyle(
                   fontSize: 32,
@@ -26,58 +31,57 @@ class LoginPage extends StatelessWidget {
                   color: Colors.black87,
                 ),
               ),
-              SizedBox(height: 20),
-              // for the loogo to be added.
-              SizedBox(height: 120),
-              SizedBox(height: 20),
-              _buildInputField('Email', emailController),
+              const SizedBox(height: 20),
+              _buildInputField('AUC Email', emailController),
               _buildInputField('Password', passwordController, obscureText: true),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: primaryColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 80),
+                  padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 80),
                 ),
-                onPressed: () {
-                  // Check if the email is valid
-                  if (emailController.text.endsWith('@aucegypt.edu')) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
+                onPressed: () async {
+                  String email = emailController.text.trim();
+                  String password = passwordController.text;
+
+                  if (email.endsWith('@aucegypt.edu')) {
+                    final db = await DatabaseHelper().database;
+                    final result = await db.query(
+                      'accounts',
+                      where: 'email = ? AND password = ?',
+                      whereArgs: [email, password],
                     );
+
+                    if (result.isNotEmpty) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (_) => HomePage()),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Invalid credentials!')),
+                      );
+                    }
                   } else {
-                    // Show an error if the email is invalid
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Please use an AUC email (@aucegypt.edu)'),
-                        backgroundColor: Colors.red,
-                      ),
+                      const SnackBar(content: Text('Please use a valid AUC email address.')),
                     );
                   }
                 },
-                child: Text('Login', style: TextStyle(fontSize: 18)),
+                child: const Text('Login', style: TextStyle(fontSize: 18)),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SignUpPage()),
+                    MaterialPageRoute(builder: (_) => SignUpPage()),
                   );
                 },
-                child: Text('New user? Sign-Up', style: TextStyle(color: primaryColor)),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
-                  );
-                },
-                child: Text('Forgot My Password', style: TextStyle(color: primaryColor)),
+                child: const Text('New user? Sign-Up', style: TextStyle(color: primaryColor)),
               ),
             ],
           ),
