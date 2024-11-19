@@ -1,0 +1,78 @@
+//firbase firestore
+dependencies:
+  cloud_firestore: ^4.0.3
+  firebase_auth: ^5.0.3
+  firebase_core: ^2.10.1
+
+import 'package:firebase_core/firebase_core.dart';
+
+void main() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+    runApp(MyApp());
+}
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+class FirestoreHelper {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // Create a new user account
+  Future<void> createAccount(String fullName, String email, String password) async {
+    try {
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: email, password: password,
+      );
+
+      await _firestore.collection('accounts').doc(userCredential.user!.uid).set({
+        'full_name': fullName,
+        'email': email,
+        'created_at': Timestamp.now(),
+      });
+    } catch (e) {
+      print('Error creating account: $e');
+      rethrow;
+    }
+  }
+
+  // Login an existing user
+  Future<User?> login(String email, String password) async {
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email, password: password,
+      );
+      return userCredential.user;
+    } catch (e) {
+      print('Error logging in: $e');
+      rethrow;
+    }
+  }
+
+  // Add initial courses to Firestore
+  Future<void> insertInitialCourses() async {
+    CollectionReference courses = _firestore.collection('courses');
+
+    final initialCourses = [
+      {'department': 'CSCE', 'course_name': 'Digital Design I'},
+      {'department': 'CSCE', 'course_name': 'Digital Design I lab'},
+      {'department': 'CSCE', 'course_name': 'Fundamentals of Computing I'},
+      {'department': 'CSCE', 'course_name': 'Programming in Java'},
+      {'department': 'CSCE', 'course_name': 'Computer Architecture'},
+    ];
+
+    for (var course in initialCourses) {
+      await courses.add(course);
+    }
+  }
+
+  // Fetch courses by department
+  Future<List<Map<String, dynamic>>> getCoursesByDepartment(String department) async {
+    QuerySnapshot snapshot = await _firestore
+        .collection('courses')
+        .where('department', isEqualTo: department)
+        .get();
+
+    return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+  }
+}
